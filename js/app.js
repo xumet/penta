@@ -2,7 +2,7 @@ var App = (function(App){
     "use strict";
 
     App.settings = {
-        "debug" : true,
+        "debug" : false,
         "width" : null,
         "height" : null,
         "note_size" : 50,
@@ -45,7 +45,7 @@ var App = (function(App){
                 {id : '3', name : 'rem', img : 'tomate1.png', english_name: 'Ds'},
                 {id : '4', name : 'dom', img : 'kiwi3.png', english_name: 'Cs'},
                 {id : '5', name : 'si', img : 'naranja3.png', english_name: 'B'},
-                {id : '6', name : 'la', img : 'melocoton2.png', english_name: 'A'},
+                {id : '6', name : 'la', img : 'calabaza1.png', english_name: 'A'},
                 {id : '7', name : 'sol', img : 'limon1.png', english_name: 'G'},
                 {id : '8', name : 'fa', img : 'manzana3.png', english_name: 'F'},
                 {id : '9', name : 'mi', img : 'pera2.png', english_name: 'E'},
@@ -99,7 +99,7 @@ var App = (function(App){
 
             App.instrument = piano;
             
-            // Load de files for every note
+            // Load files for every note
             App.sounds = [];
             for(var i = 0; i < App.instrument.length; i++){
                 App.sounds[i] = document.createElement('audio');
@@ -280,7 +280,6 @@ var App = (function(App){
         App.sounds[note].pause();
         App.sounds[note].currentTime = 0;
         App.sounds[note].play();
-
     }
     
     // Output debug message
