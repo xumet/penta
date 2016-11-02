@@ -10,6 +10,7 @@ There are planned three modules:
 - The luthier: Select your's veggies and fruits and arrange your instrument.
 
 Right now the Player is functional. You can play **Star Wars** theme with the following settings:
-
+![alt tag](http://pinwheelapps.com/penta/img/settings.png)
 
 You can see **Penta** in action at http://pinwheelapps.com/penta/
+![alt tag](http://pinwheelapps.com/penta/img/penta_demo.png)
