@@ -14,8 +14,8 @@ var sw_song = [
             ];
 
 App.initialize();
-//App.initPlayer(sw_song);
-//App.initComposer();
 
-Player.initialize(sw_song);
-//Composer.initialize();
+
+//Player.initialize(sw_song);
+Composer.initialize();
+//Luthier.initialize();
