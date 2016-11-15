@@ -1,3 +1,10 @@
-"use strict";
+var Luthier = (function(Luthier, $, d3){
+	"use strict";
 
-// Here the penta luthier
+	Luthier.initialize = function() {
+		//
+	}
+
+	return Luthier;
+
+})(Luthier || {}, jQuery, d3);

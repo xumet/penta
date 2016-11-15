@@ -2,11 +2,11 @@ var App = (function(App, $, d3){
     "use strict";
 
     App.settings = {
-        "debug" : false,
+        "debug" : true,
         "width" : null,
         "height" : null,
         "note_size" : 50,
-        "img_path" : "img/png500/"
+        "img_path" : "img/png500_/"
     }
 
     App.initialize = function() {
@@ -63,17 +63,6 @@ var App = (function(App, $, d3){
                 {chard : 'click', code : '-1', note_id : '11'}
             ];
 
-            // Sample Song: Star Wars 
-            /*
-            var sw_song = [
-                're','re','re','sol','si','dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','re','re','re','sol','rem',
-                'dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','re','re','mi','mi','dom','si','la','sol','sol','la','si','la','mi','fa','re','re','mi','mi','dom','si','la','sol',
-                'rem','la','la','re','re','mi','mi','dom','si','la','sol','sol','la','si','la','mi','fa','rem','rem','solm','fam','mim','rem','dom','si','la','sol','rem','la','la','la','re','re','re','sol','rem',
-                'dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','re','re','re','sol','rem',
-                'dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','rem','rem','rem','solm','sol','sol','sol','sol'
-            ];
-            */
-
             var cello = [
                 // TODO
             ];
@@ -102,40 +91,13 @@ var App = (function(App, $, d3){
                 App.sounds[i].setAttribute('src', 'sounds/' + App.instrument[i].file);
             }
 
-            //App.song = sw_song;
-            //App.songNotePosition = 1;
-            //App.songLinePosition = 1;
-
             App.setNotesPatterns(App.notes);
-
-            //App.drawSongSheet(App.song);
-
-            //App.drawNextNote();
             
             // Launch an fake animation for preload the music sheet in GPU memory
             $("#musicsheet").animate({
                 top: "-=1"
             }, 10);
-
-            
-    }
-
-    App.initPlayer = function(song){
-        App.song = song;
-        App.songNotePosition = 1;
-        App.songLinePosition = 1;
-
-        App.drawSongSheet(App.song);
-        App.drawNextNote();
-
-        App.listenForKeys(App.playNoteInSong);
-    }
-
-    App.initComposer = function(){
-        App.song = {};
-        App.songNotePosition = 1;
-        App.songLinePosition = 1;
-        App.listenForKeys(App.recordNoteInSong);
+   
     }
 
     App.listenForKeys = function(handler){
@@ -207,35 +169,6 @@ var App = (function(App, $, d3){
         .attr("fill", "url(#pattern_" + pattern_id + ")");
     }
 
-    // Draw Song Sheet
-    App.drawSongSheet = function(song){
-        // Calc number of notes by line
-        var notes_in_line = parseInt(App.svg.attr("width") / App.settings.note_size);
-        App.debug('notes_in_line: ' + notes_in_line);
-        
-        var note;
-        var note_id;
-        var note_name;
-        App.debug('lines: ' + Math.ceil(song.length / notes_in_line));
-
-        for (var i = 0; i < Math.ceil(song.length / notes_in_line) ; i++) {
-            // Draw the pentagram
-            App.drawPenta(i * (App.settings.note_size * 7 ) + App.settings.note_size);
-            App.debug(" ++++++++++ Draw Penta num: " + (i+1));
-            
-            // Draw notes in current pentagram
-            for(var n = 0; n < notes_in_line; n++)
-            {
-                note_name = song[n + (notes_in_line * i) ];
-                note = _.findWhere(App.notes, {name : note_name});
-                note_id = note['id'];
-                App.drawNote(note_id, n * App.settings.note_size , App.settings.note_size * 7 * i);
-                App.debug(note_name);
-                if(n + (notes_in_line * i) == song.length -1) n = notes_in_line;
-            };  
-        };
-    }
-
     // Create the pointer, start at the first note
     App.drawNextNote = function(){
         App.nextNote = App.svgSheet.append("rect")
@@ -254,58 +187,6 @@ var App = (function(App, $, d3){
         }, 1000, function(){
             App.debug("Animation complete");
         });
-    }
-
-    // Main function called after every key press
-    App.playNoteInSong = function(code){
-        var key = _.findWhere(App.keys, {code : code.toString()});
-        if(key != undefined){
-            var note_id = key['note_id'];
-            App.playNote(note_id);
-            var note = _.findWhere(App.notes, {id : note_id});
-            var note_name = note['name'];
-            
-            // If its the correct note move the green pointer
-            if(note_name == App.song[App.songNotePosition - 1]){
-                App.debug("OK for " + note_name);
-                
-                // If its the last note in actual line move everything to next line
-                if(0 == (App.songNotePosition ) % (parseInt(App.svg.attr("width") / App.settings.note_size))){
-                    App.nextPentagramLine();
-                    App.nextNote.attr("y", parseInt(App.nextNote.attr("y")) +  (App.settings.note_size * 7));
-                    App.nextNote.attr("x",0);
-                    App.songLinePosition++;
-                }
-                else {
-                    App.nextNote.transition().attr("x", App.settings.note_size * (App.songNotePosition % (parseInt(App.svg.attr("width") / App.settings.note_size) ) ) );
-                }
-                
-                App.songNotePosition++;
-
-            }
-            else {
-                App.debug("Wrong...");
-                App.nextNote.attr("fill", "rgb(255,99,71)"); // Tomato Color
-                App.nextNote.transition().delay(100).attr("fill", "rgb(144,238,144)"); // Turn to green color
-            }
-
-        } 
-        else App.debug('Another key pressed, its not a note. Maybe an incorrect makey makey connection');
-    }
-
-    App.recordNoteInSong = function(code){
-        var key = _.findWhere(App.keys, {code : code.toString()});
-        if(key != undefined){
-            var note_id = key['note_id'];
-            App.playNote(note_id);
-
-            // Grabar nota, 
-            // mostrar nota
-            // Si ultima nota en fila crear nueva fila
-        } 
-        else App.debug('Another key pressed, its not a note. Maybe an incorrect makey makey connection');
-
-
     }
 
     // Play the note
@@ -327,4 +208,3 @@ var App = (function(App, $, d3){
     return App;
 
 })(App || {}, jQuery, d3);
-

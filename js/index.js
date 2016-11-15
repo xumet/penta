@@ -4,7 +4,7 @@ if(localStorage["token"] === undefined ){
     localStorage["token"] = 'blank';
 }
 
-
+// Sample Song: Star Wars
 var sw_song = [
                 're','re','re','sol','si','dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','re','re','re','sol','rem',
                 'dom','si','la','solm','rem','dom','si','la','solm','rem','dom','si','dom','la','re','re','mi','mi','dom','si','la','sol','sol','la','si','la','mi','fa','re','re','mi','mi','dom','si','la','sol',
@@ -14,5 +14,8 @@ var sw_song = [
             ];
 
 App.initialize();
-App.initPlayer(sw_song);
+//App.initPlayer(sw_song);
 //App.initComposer();
+
+Player.initialize(sw_song);
+//Composer.initialize();
